@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 97cc0eb36e087e94e988090a7a1a7729
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - Running: {instanceID: 0}
+  - Shooting: {instanceID: 0}
+  - footballer: {fileID: -927199367670048503, guid: 61d5a13cd27ac63429a7c51c3fac30bb,
+      type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
