@@ -6,7 +6,12 @@ ModelImporter:
   - first:
       74: -203655887218126122
     second: Kick Soccerball
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Ch38_body
+    second: {fileID: 2100000, guid: a24037aa2dae5b145b048dcaf948032a, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
