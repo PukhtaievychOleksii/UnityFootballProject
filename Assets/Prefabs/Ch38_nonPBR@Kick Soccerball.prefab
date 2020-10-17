@@ -456,6 +456,36 @@ Transform:
   m_Father: {fileID: 9196401941097598558}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1164709018707023898
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8960897517240575869}
+  m_Layer: 0
+  m_Name: DriblingPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 7148428337604731935, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8960897517240575869
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1164709018707023898}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.047, y: 0.159, z: 0.752}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 8997057191343361711}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1322770595104134401
 GameObject:
   m_ObjectHideFlags: 0
@@ -964,7 +994,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 80
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!136 &6253815642425176508
 CapsuleCollider:
@@ -995,7 +1025,12 @@ MonoBehaviour:
   RunningParamName: IsRunning
   JumpingParamName: IsJumping
   WalkingParamName: IsWalking
-  m_ball: {fileID: 0}
+  ShootingParamName: IsShooting
+  animator: {fileID: 0}
+  ball: {fileID: 0}
+  controller: {fileID: 0}
+  EnemiesGates: {fileID: 0}
+  driblingZone: {fileID: 0}
 --- !u!1 &3004340103344032706
 GameObject:
   m_ObjectHideFlags: 0
@@ -1550,7 +1585,8 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 8960897517240575869}
   m_Father: {fileID: 1418828495845674285}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1622,8 +1658,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 0.4, z: 1}
-  m_Center: {x: 0, y: 0.2, z: 0.5}
+  m_Size: {x: 1.5, y: 0.4, z: 1.5}
+  m_Center: {x: 0, y: 0.2, z: 0}
 --- !u!114 &6253815641486382492
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1636,6 +1672,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 761ab01713a55d9429688eeed8d6fa86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  driblingPoint: {fileID: 1164709018707023898}
 --- !u!1 &5420176588554102208
 GameObject:
   m_ObjectHideFlags: 0
