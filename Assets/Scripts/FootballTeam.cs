@@ -3,31 +3,29 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 //TODO: struct as arguments 
+public struct TeamParams
+{
+    public string Name { get; private set; }
+    public Color UniformColor { get; private set; }
+    public Image Emblem { get; private set; }
+}
 public class FootballTeam : MonoBehaviour
 {
     public List<FootballPlayer> TeamMembers = new List<FootballPlayer>();
-    public string Name;
-    public Color UniformColor;
-    public  Image Emblem;
+    public TeamParams TeamParameters;
 
-    public FootballTeam(string Name,Color UniformColor,Image Emblem, List<FootballPlayer> TeamMembers) 
-        : this (Name,UniformColor,Emblem)
+    
+    public FootballTeam(TeamParams teamParameters)
     {
-
-        this.TeamMembers = new List<FootballPlayer>(TeamMembers);//!!!Mistake
-        SetTeamsForFootballers();
+        TeamParameters = teamParameters;
     }
-    public FootballTeam(string Name,Color UniformColor,Image Emblem)
+   public void AddTeamMember(FootballPlayer player)
     {
-        this.Name = Name;
-        this.UniformColor = UniformColor;
-        this.Emblem = Emblem;
-    }
-   private void SetTeamsForFootballers()
-    {
-        foreach(FootballPlayer footballer in TeamMembers)
+        foreach(FootballPlayer member in TeamMembers)
         {
-            footballer.Team = this;
+            if (player = member) return;
         }
+        TeamMembers.Add(player);
+        player.Team = this;
     }
 }

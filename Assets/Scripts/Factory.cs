@@ -10,28 +10,42 @@ public class Factory
     {
         this.game = game;
     }
-    public  void AddFootballer(GameObject footballerPrefab,FieldPosition position,FootballTeam team,Controller controller)
+    public  void AddFootballer(GameObject footballerPrefab,FieldPosition fieldposition,Controller controller)
     {
         FootballPlayer footballPlayer = footballerPrefab.GetComponent<FootballPlayer>();
         if (footballPlayer == null) Debug.LogError("No footballComponent in Prefab");
-        footballPlayer.Team = team;
-        footballPlayer.Position = position;
-        if(controller is PlayerController)
+        footballPlayer.PlayerFieldPosition = fieldposition;
+        SetEnemiesGate(ref footballPlayer);
+        controller.SetM_Footballer(footballPlayer);
+        game.Controllers.Add(controller);
+       /* if(controller is PlayerController)
         {
             footballPlayer.controller = game.playerController;
             game.playerController.m_footballer = footballPlayer;
         }
         else
         {
+            //TODO:solve the problem
             footballPlayer.gameObject.AddComponent<AIController>();
             footballPlayer.controller = footballPlayer.gameObject.GetComponent<AIController>();
-        }
+        }*/
         game.footballers.Add(footballPlayer);
     }
 
-    public void AddTeam(string Name, Color UniformColor, Image Emblem,List<FootballPlayer> TeamMembers)
+    public void AddTeam(TeamParams teamParameters)
     {
-        if (TeamMembers != null) game.Teams.Add(Name, new FootballTeam(Name, UniformColor, Emblem, TeamMembers));
-        else game.Teams.Add(Name, new FootballTeam(Name, UniformColor, Emblem));
+       game.Teams.Add(teamParameters.Name, new FootballTeam(teamParameters));
+    }
+
+    private void SetEnemiesGate(ref FootballPlayer player)
+    {
+        float distanceToLeftGates;
+        float distanceToRightGates;
+        distanceToLeftGates = (game.GatesLeft.gameObject.transform.position - player.transform.position).magnitude;
+        distanceToRightGates = (game.GatesRight.gameObject.transform.position - player.transform.position).magnitude;
+        if (distanceToLeftGates > distanceToRightGates) player.EnemiesGates = game.GatesLeft;
+        else player.EnemiesGates = game.GatesRight;
+        //   Debug.Log("DistanceToLeft: " + distanceToLeftGates + " DistanceToRight: " + distanceToRightGates + " EnemiesGates: " + player.EnemiesGates.name);
+        //Debug.Log(player.transform.position);
     }
 }

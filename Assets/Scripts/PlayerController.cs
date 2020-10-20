@@ -17,7 +17,7 @@ public class PlayerController : Controller
     void Start()
     {
         //  footballer = GetComponent<FootballPlayer>();
-        if (m_footballer == null) Debug.LogError("No Footballer In PlayerController");
+        if (!IsM_FootballerFilled()) Debug.LogError("No Footballer In PlayerController");
         game = GetComponent<Game>();
 
     }
@@ -40,6 +40,7 @@ public class PlayerController : Controller
     
     public void MoveFootballer(float AxisVert, float AxisHor)
     {
+        if (!IsM_FootballerFilled()) return;
         m_footballer.MoveComp.SetMovingDataByAxis(AxisVert, AxisHor);
        
     }
@@ -66,7 +67,8 @@ public class PlayerController : Controller
     
     private void SetKeyManagers()
     {
-        if (m_footballer.MoveComp == null || ActiveKeyList.Count > 0) return;
+       
+        if (!IsM_FootballerFilled() || ActiveKeyList.Count > 0) return;
       
         AddKeyManager(new KeyManager(KeyCode.Space, m_footballer.MoveComp.Jump));
         AddKeyManager(new KeyManager(KeyCode.LeftShift, m_footballer.MoveComp.StartRunning, m_footballer.MoveComp.FinishRunning));
@@ -83,5 +85,6 @@ public class PlayerController : Controller
     {
         ActiveKeyList.Add(keymanager);
     }
+    
     }
 

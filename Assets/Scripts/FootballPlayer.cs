@@ -22,8 +22,7 @@ public class FootballPlayer : MonoBehaviour
     public FootballPlayer currentOpponent = null;
     public float ApproximetlyMistakeValue = 2;//use to check whether angels are equal
     public FootballTeam Team;
-    public FieldPosition Position;
-    public GameObject PointOnField;
+    public FieldPosition PlayerFieldPosition;
     public States CurrentState = States.Defending;
 
 

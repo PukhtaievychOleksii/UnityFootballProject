@@ -36,7 +36,7 @@ public class DriblingZone : MonoBehaviour
         owner.ball = ball;
         //Stop All Forces
         PhysicHelper.StopAllPhysicForces(owner.gameObject.GetComponent<Rigidbody>());
-        PhysicHelper.StopAllPhysicForces(ball.rigidBody);
+        PhysicHelper.StopAllPhysicForces(ball.rigidBody/*ball.gameObject.GetComponent<Rigidbody>()*/);
         owner.ball.IsUnderForceAffect = false;
         SetDriblingType();    
         

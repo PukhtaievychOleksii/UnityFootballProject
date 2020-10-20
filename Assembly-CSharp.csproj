@@ -90,6 +90,7 @@
     <Compile Include="Assets\Scripts\ShootAim.cs" />
     <Compile Include="Assets\Scripts\Spawner.cs" />
     <Compile Include="Assets\Scripts\StateMachine.cs" />
+    <Compile Include="Assets\Scripts\Tactics.cs" />
     <None Include="Assets\SampleScenes\Shaders\Skybox-Procedural.shader" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>D:/Programing/Unity/UnityFootballProject/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>

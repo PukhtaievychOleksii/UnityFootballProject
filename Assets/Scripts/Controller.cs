@@ -15,4 +15,15 @@ public class Controller : MonoBehaviour
     {
         
     }
+    public void SetM_Footballer(FootballPlayer player)
+    {
+        m_footballer = player;
+        player.controller = this;
+    }
+    protected bool IsM_FootballerFilled()
+    {
+        if (m_footballer == null) return false;
+        if (m_footballer.MoveComp == null || m_footballer.AtackComp == null || m_footballer.DefenseComp == null) return false;
+        return true;
+    }
 }

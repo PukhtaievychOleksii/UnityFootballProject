@@ -17,12 +17,14 @@ public class Ball : MonoBehaviour
 
     public event KeeperChanged OnKeeperChanged;
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
-        rigidBody = GetComponentInParent<Rigidbody>();
+        //TODO:doesn't work
+        rigidBody = GetComponent<Rigidbody>();
+        rigidBody.AddForce(new Vector3(0,0,0));
         transform = GetComponent<Transform>();
     }
-
+    
    
     public void HitBall(Vector3 direction, float multiplayer)
     {
@@ -31,7 +33,7 @@ public class Ball : MonoBehaviour
     }
     void Update()
     {
-        
+       
     }
     public void ChangeKeeper(FootballPlayer player)
     {

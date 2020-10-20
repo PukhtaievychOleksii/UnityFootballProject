@@ -2,38 +2,27 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum FieldPosition
-{
-    LD1,  LD2,
-    RD1,  RD2,
-    LF1,  LF2,
-    RF1,  RF2,
-    GK1,  GK2
-}
 
-public enum Team
-{
-    Chelsea,
-    Liverpool,
-    Dynamo,
-    Borrussia_Dortmund
-}
+
+
 public class Game : MonoBehaviour
 {
     //Must be attached to Camera
     public static Dictionary<string, Quaternion> RotationDirections = new Dictionary<string, Quaternion>();
     public Dictionary<string, FootballTeam> Teams = new Dictionary<string, FootballTeam>();
     public List<FootballPlayer> footballers = new List<FootballPlayer>();
-    public Ball  ball;
+    public List<Controller> Controllers = new List<Controller>();
+    public Ball  ball = new Ball();
     public GameObject playerPrefab;
-    public GameObject BallSpawnPoint;
     public PlayerController playerController;
     public GameObject Field;
+    public Spawner spawner = new Spawner();
     public static float  StandartYPosition;
     public Gates GatesLeft;//Right or Left From Camera
     public Gates GatesRight;
     public Factory factory;
     public StateMachine StateMachine;
+    public Tactics GameTactics;
 
     // Start is called before the first frame upda
     private void Awake()
@@ -52,11 +41,12 @@ public class Game : MonoBehaviour
     }
     void Start()
     {
-     //   spawner = GetComponent<Spawner>();
-       // spawner.SpawnPlayers();
+        SetPlayers();
+       spawner = GetComponent<Spawner>();
+       
+       spawner.SpawnObjects();
         playerController = GetComponent<PlayerController>();
         StandartYPosition = Field.transform.position.y;
-      //  factory.AddFootballer(playerPrefab, FieldPosition.LF1, Team.Liverpool,playerController);
         StateMachine = new StateMachine(this);
         ball.OnKeeperChanged += StateMachine.SetStates;
     }
@@ -66,8 +56,11 @@ public class Game : MonoBehaviour
     {
        // StateMachine.SetStates(); 
     }
+    private void SetPlayers()
+    {
+        factory.AddFootballer(playerPrefab, GameTactics.GetAppropriateFieldPostion(FieldPositionShortName.LF2), playerController);
+    }
 
-    
 
-   
+
 }
