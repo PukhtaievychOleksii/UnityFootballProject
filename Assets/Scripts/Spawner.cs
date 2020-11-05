@@ -2,6 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public struct SpawnData
+{
+    public GameObject Prefab;
+    public Vector3 Position;
+    public SpawnData(GameObject prefab,Vector3 position)
+    {
+        Prefab = prefab;
+        Position = position;
+    }        
+
+}
+
 public class Spawner : MonoBehaviour
 {
     public GameObject HeroSpawnPoint;
@@ -14,7 +26,6 @@ public class Spawner : MonoBehaviour
         //TODO :  make a prefab with spawner and instantiate it in Game
         game = GetComponent<Game>();
         game.playerController = GetComponent<PlayerController>();
-        ball = game.ball;
        // SpawnObjects();
     }
 
@@ -36,16 +47,11 @@ public class Spawner : MonoBehaviour
 
     }
 
-    public void SpawnObjects()
-    {
-        // SpawnControlledPlayer();
-        SpawnBall();
-        SpawnAllPlayers();
-    }
+    
 
     private void SpawnControlledPlayer()
     {
-        GameObject footballObject = GetAndInstantiatePlayer(game.playerPrefab, HeroSpawnPoint.transform.position,ball.gameObject.transform.position);
+        GameObject footballObject = GetAndInstantiatePlayer(game.PlayerPrefab, HeroSpawnPoint.transform.position,ball.gameObject.transform.position);
    
       /*  FootballPlayer footballPlayer = footballObject.GetComponent<FootballPlayer>();
         footballPlayer.controller = game.playerController;
@@ -73,13 +79,48 @@ public class Spawner : MonoBehaviour
 
 
         }*/
+        
+    }
+    private void SpawnPlayers()
+    {
+        foreach(FootballPlayer footballer in game.footballers)
+        {
+            footballer.PlayerObject =  Instantiate(footballer.PlayerModel, footballer.FieldPosition.PositionPoint.transform.position, Quaternion.identity);
+        }
     }
 
   
 
-    public void SpawnBall()
+    public void SpawnBall(SpawnData spawnData)
     {
-        Instantiate(ball.gameObject, BallSpawnPoint.transform.position, Quaternion.identity);
-        PhysicHelper.StopAllPhysicForces(ball.rigidBody/*ball.gameObject.GetComponent<Rigidbody>()*/);
+        GameObject ballObject = Instantiate(spawnData.Prefab, spawnData.Position, Quaternion.identity);
+        ballObject.AddComponent<Ball>();
+        Ball ball = ballObject.GetComponent<Ball>();
+        PhysicHelper.StopAllPhysicForces(ball.rigidBody);
+        game.Ball = ball;
+
+    }
+
+    public void SpawnFootballer(SpawnData spawnData)
+    {
+        GameObject footballerObject = Instantiate(spawnData.Prefab, spawnData.Position,Quaternion.identity);
+        footballerObject.AddComponent<FootballPlayer>();
+        FootballPlayer footballPlayer = footballerObject.GetComponent<FootballPlayer>();
+        footballPlayer.SetFootballerObject(footballerObject);
+        SetEnemiesGate(ref footballPlayer);
+        footballPlayer.SetParamNames(game.footballerTextData);
+        game.footballers.Add(footballPlayer);
+    }
+
+    private void SetEnemiesGate(ref FootballPlayer player)
+    {
+        float distanceToLeftGates;
+        float distanceToRightGates;
+        distanceToLeftGates = (game.GatesLeft.gameObject.transform.position - player.FieldPosition.PositionPoint.transform.position).magnitude;
+        distanceToRightGates = (game.GatesRight.gameObject.transform.position - player.FieldPosition.PositionPoint.transform.position).magnitude;
+        if (distanceToLeftGates > distanceToRightGates) player.EnemiesGates = game.GatesLeft;
+        else player.EnemiesGates = game.GatesRight;
+        //   Debug.Log("DistanceToLeft: " + distanceToLeftGates + " DistanceToRight: " + distanceToRightGates + " EnemiesGates: " + player.EnemiesGates.name);
+        //Debug.Log(player.transform.position);
     }
 }

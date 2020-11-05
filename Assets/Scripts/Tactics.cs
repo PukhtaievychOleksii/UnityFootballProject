@@ -25,9 +25,9 @@ public struct FieldPosition
 }
 public class Tactics : MonoBehaviour
 {
-      // public Dictionary<FieldPositionShortName, FieldPosition> FieldPositions = new Dictionary<FieldPositionShortName,FieldPosition>();
+    public GameObject BallSpawnPoint;
     public List<FieldPosition> FieldPositions = new List<FieldPosition>();
-    public List<GameObject> SpawnPoints { private get; set; }
+    public List<GameObject> SpawnPoints;
     void Start()
     {
         if (SpawnPoints == null) Debug.LogError("SpawnPoints are not set");
@@ -44,6 +44,7 @@ public class Tactics : MonoBehaviour
         //TODO:change Dictionary on Array with GetApropriateFieldPosition
     {
         AddFieldPosition(FieldPositions,FieldPositionShortName.LF1,"LeftForward1");
+        
     }
 
     private GameObject GetAppropriateSpawnPoint(string PointName)

@@ -272,6 +272,88 @@ Transform:
   m_Father: {fileID: 1368224123}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &218780448
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 218780452}
+  - component: {fileID: 218780451}
+  - component: {fileID: 218780449}
+  m_Layer: 0
+  m_Name: ComponentHolder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &218780449
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 218780448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d55b921ab5a1e4a41888b19c37dba987, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BallSpawnPoint: {fileID: 114732114}
+  SpawnPoints:
+  - {fileID: 536172868}
+  - {fileID: 760245547}
+  - {fileID: 526754127}
+  - {fileID: 1023691997}
+  - {fileID: 689143865}
+  - {fileID: 1606571282}
+  - {fileID: 1003423060}
+  - {fileID: 113461069}
+  - {fileID: 739092736}
+  - {fileID: 273632651}
+--- !u!114 &218780451
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 218780448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5143628e13ea3e14b9e822583f1698e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  footballers: []
+  Controllers: []
+  Ball: {fileID: 0}
+  BallPrefab: {fileID: 1383449858123784034, guid: fa1ca4a551701df4b99b1e9ace590754,
+    type: 3}
+  PlayerPrefab: {fileID: 2732533952702299966, guid: f37825b72b7c5874693953b97ad4c359,
+    type: 3}
+  playerController: {fileID: 0}
+  Field: {fileID: 1368224122}
+  Spawner: {fileID: 0}
+  GatesLeft: {fileID: 1333054291}
+  GatesRight: {fileID: 700650595}
+  tactics: {fileID: 0}
+  ControllerCenter: {fileID: 0}
+--- !u!4 &218780452
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 218780448}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.8503513, y: 2.5256395, z: -4.477647}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &266035575
 GameObject:
   m_ObjectHideFlags: 0
@@ -1530,11 +1612,6 @@ GameObject:
   - component: {fileID: 963194228}
   - component: {fileID: 963194227}
   - component: {fileID: 963194226}
-  - component: {fileID: 963194229}
-  - component: {fileID: 963194233}
-  - component: {fileID: 963194232}
-  - component: {fileID: 963194231}
-  - component: {fileID: 963194230}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1607,111 +1684,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 23.849, y: -88.495, z: 0}
---- !u!114 &963194229
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 963194225}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5143628e13ea3e14b9e822583f1698e1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  footballers: []
-  Controllers: []
-  ball: {fileID: 8837448896641045643, guid: fa1ca4a551701df4b99b1e9ace590754, type: 3}
-  playerPrefab: {fileID: 2732533952702299966, guid: f37825b72b7c5874693953b97ad4c359,
-    type: 3}
-  playerController: {fileID: 0}
-  Field: {fileID: 1368224122}
-  spawner: {fileID: 0}
-  GatesLeft: {fileID: 1333054291}
-  GatesRight: {fileID: 700650595}
-  StateMachine: {fileID: 0}
---- !u!114 &963194230
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 963194225}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c35f00e61711b9247abe9571baec61c8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SpawnPoints:
-  - {fileID: 113461069}
-  - {fileID: 739092736}
-  - {fileID: 1606571282}
-  - {fileID: 1003423060}
-  - {fileID: 526754127}
-  - {fileID: 536172868}
-  - {fileID: 1023691997}
-  - {fileID: 760245547}
-  HeroSpawnPoint: {fileID: 1606571282}
-  BallSpawnPoint: {fileID: 114732114}
---- !u!114 &963194231
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 963194225}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f6a4b15c55485d4f8c6d2df635ac923, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_footballer: {fileID: 0}
---- !u!114 &963194232
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 963194225}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 97cc0eb36e087e94e988090a7a1a7729, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  RunningParamName: 
-  JumpingParamName: 
-  WalkingParamName: 
-  ShootingParamName: 
-  animator: {fileID: 0}
-  ball: {fileID: 0}
-  controller: {fileID: 0}
-  EnemiesGates: {fileID: 0}
-  driblingZone: {fileID: 0}
-  currentOpponent: {fileID: 0}
-  ApproximetlyMistakeValue: 2
-  Team: {fileID: 0}
-  Position: 0
-  PointOnField: {fileID: 0}
-  CurrentState: 1
---- !u!95 &963194233
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 963194225}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &1003423060
 GameObject:
   m_ObjectHideFlags: 0
@@ -1784,7 +1756,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1023691998}
   m_Layer: 0
-  m_Name: RightDefender2
+  m_Name: RightDefender1
   m_TagString: Untagged
   m_Icon: {fileID: -5442936267250999957, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -2477,8 +2449,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c66e4979bf234af4eb69c86024c8ac0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  game: {fileID: 963194229}
-  spawner: {fileID: 963194230}
+  game: {fileID: 0}
+  spawner: {fileID: 0}
 --- !u!1 &1976965509 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7445637658871225243, guid: d8b96caa59725a64f9a9ef98905561e6,
@@ -2497,8 +2469,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c66e4979bf234af4eb69c86024c8ac0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  game: {fileID: 963194229}
-  spawner: {fileID: 963194230}
+  game: {fileID: 0}
+  spawner: {fileID: 0}
+--- !u!1 &2024293233
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2024293234}
+  m_Layer: 0
+  m_Name: ControllersCenter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2024293234
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2024293233}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -21.97097, y: -7.692464, z: 6.5415306}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2032022545
 GameObject:
   m_ObjectHideFlags: 0

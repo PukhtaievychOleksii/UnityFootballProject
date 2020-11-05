@@ -6,7 +6,7 @@ public enum States
     Atacking,
     Defending
 }
-public class StateMachine : MonoBehaviour
+public class StateMachine 
 {
     private Game game;
     public StateMachine(Game game)
@@ -22,7 +22,7 @@ public class StateMachine : MonoBehaviour
     }
     private void UpdateState(FootballPlayer footballer)
     {
-        if (game.ball.kepper.Team != footballer.Team) footballer.CurrentState = States.Defending;
+        if (game.Ball.kepper.Team != footballer.Team) footballer.CurrentState = States.Defending;
         else footballer.CurrentState = States.Atacking;
 
     }

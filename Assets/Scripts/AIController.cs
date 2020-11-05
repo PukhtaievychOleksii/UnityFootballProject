@@ -24,4 +24,7 @@ public class AIController : Controller
     {
         m_footballer = footballer;
     }
+    public AIController() { 
+    
+    }
 }

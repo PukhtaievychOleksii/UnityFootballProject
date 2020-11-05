@@ -30,7 +30,7 @@ public class MovementComponent
     private string RunningParamName;
     private string JumpingParamName;
     private string WalkingParamName;
-    private FootballPlayer owner;//Use values from 1 to 10
+    private FootballPlayer footballPlayer;//Use values from 1 to 10
     public float MoveSkill = 0;
     //BOOL VALUES
     public bool IsRunning;
@@ -43,7 +43,7 @@ public class MovementComponent
     
     public MovementComponent(FootballPlayer player, string RunningParamName, string JumpingParamName, string WalkingParamName,float MoveSkill)
     {
-        owner = player;
+        footballPlayer = player;
         this.RunningParamName = RunningParamName;
         this.JumpingParamName = JumpingParamName;
         this.WalkingParamName = WalkingParamName;
@@ -60,9 +60,10 @@ public class MovementComponent
         angularSpeed = 360;
         RunningSpeed = MoveSkill;
         WalkingSpeed = RunningSpeed * 3 / 4;
-        rotation = owner.transform.rotation;
-        WorldVelocity = owner.transform.forward;
-        targetRotation = owner.transform.rotation;
+       
+        rotation = footballPlayer.PlayerObject.transform.rotation;
+        WorldVelocity = footballPlayer.PlayerObject.transform.forward;
+        targetRotation = footballPlayer.PlayerObject.transform.rotation;
         DirectionChanged += SetRotationCorrector;
     }
 
@@ -81,8 +82,8 @@ public class MovementComponent
     public void MoveToPoint(Vector3 destination)
     {
         this.destination = destination;
-        owner.animator.SetBool(RunningParamName, true);
-        WorldVelocity = (this.destination - owner.transform.position).Value.normalized;
+        footballPlayer.animator.SetBool(RunningParamName, true);
+        WorldVelocity = (this.destination - footballPlayer.transform.position).Value.normalized;
 
         // footballer.transform.LookAt(destination);
         //footballer.transform.Translate(destination);
@@ -91,7 +92,7 @@ public class MovementComponent
     {
         CorrectSpeed();
         RotateFootballer();
-        owner.transform.position += WorldVelocity * speed / 60;
+        footballPlayer.transform.position += WorldVelocity * speed / 60;
 
     }
 
@@ -146,7 +147,7 @@ public class MovementComponent
     {
         if (targetSpeed < 0.1 && speed != 0)
         {
-           owner.animator.SetBool(WalkingParamName, false);
+           footballPlayer.animator.SetBool(WalkingParamName, false);
           //  m_speed = 0;
             targetSpeed = 0;
             
@@ -156,15 +157,15 @@ public class MovementComponent
 
     public void Jump()
     {
-       owner.animator.SetTrigger(JumpingParamName);
+       footballPlayer.animator.SetTrigger(JumpingParamName);
         // m_animator.SetTrigger(m_JumpingParamName);
     }
 
     public void StopHero()
     {
         targetSpeed = 0;
-        owner.animator.SetBool(WalkingParamName, false);
-        owner.animator.SetBool(RunningParamName, false);
+        footballPlayer.animator.SetBool(WalkingParamName, false);
+        footballPlayer.animator.SetBool(RunningParamName, false);
         IsNewRotate = true;//for
     }
   private void CorrectSpeed()
@@ -205,19 +206,19 @@ public class MovementComponent
             angleCanPass = angleToPass;
         }
         rotation =Quaternion.Euler(0,rotation.eulerAngles.y + angleCanPass * rotationCorrector, 0);
-        owner.transform.rotation = rotation;
-        WorldVelocity = owner.transform.forward;        
+        footballPlayer.transform.rotation = rotation;
+        WorldVelocity = footballPlayer.transform.forward;        
 
     }
     private void StartWalking()
     {
         targetSpeed = WalkingSpeed;
-        owner.animator.SetBool(WalkingParamName, true);
+        footballPlayer.animator.SetBool(WalkingParamName, true);
     }
     public void StartRunning()
     {
         targetSpeed = RunningSpeed;
-        owner.animator.SetBool(RunningParamName, true);
+        footballPlayer.animator.SetBool(RunningParamName, true);
         if (driblingType != null) driblingType = DriblingType.FastHits;
         IsRunning = true;
     }
@@ -227,7 +228,7 @@ public class MovementComponent
     public void FinishRunning()
     {
         
-        owner.animator.SetBool(RunningParamName, false);
+        footballPlayer.animator.SetBool(RunningParamName, false);
         if (driblingType != null) driblingType = DriblingType.SlowKeep;
         IsRunning = false;
         StartWalking();
@@ -244,7 +245,7 @@ public class MovementComponent
         float angleBetween = Mathf.Abs(rotation.eulerAngles.y - targetRotation.eulerAngles.y);
        // Debug.Log(angleBetween);
 
-        if (angleBetween > owner.ApproximetlyMistakeValue && angleBetween < 360 - owner.ApproximetlyMistakeValue)
+        if (angleBetween > footballPlayer.ApproximetlyMistakeValue && angleBetween < 360 - footballPlayer.ApproximetlyMistakeValue)
         {
             return true;
         }

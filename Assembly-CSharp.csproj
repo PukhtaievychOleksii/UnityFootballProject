@@ -78,6 +78,7 @@
     <Compile Include="Assets\Scripts\DefenseComponent.cs" />
     <Compile Include="Assets\Scripts\DriblingZone.cs" />
     <Compile Include="Assets\Scripts\Factory.cs" />
+    <Compile Include="Assets\Scripts\FootballerTextData.cs" />
     <Compile Include="Assets\Scripts\FootballPlayer.cs" />
     <Compile Include="Assets\Scripts\FootballTeam.cs" />
     <Compile Include="Assets\Scripts\Game.cs" />

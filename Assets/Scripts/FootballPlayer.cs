@@ -10,6 +10,8 @@ public class FootballPlayer : MonoBehaviour
     public MovementComponent MoveComp;
     public AttackComponent AtackComp;
     public DefenseComponent DefenseComp;
+    public GameObject PlayerModel;
+    public GameObject PlayerObject;
     public string RunningParamName;
     public string JumpingParamName;
     public string WalkingParamName;
@@ -22,22 +24,31 @@ public class FootballPlayer : MonoBehaviour
     public FootballPlayer currentOpponent = null;
     public float ApproximetlyMistakeValue = 2;//use to check whether angels are equal
     public FootballTeam Team;
-    public FieldPosition PlayerFieldPosition;
+    public FieldPosition FieldPosition;
     public States CurrentState = States.Defending;
 
 
 
-    // Start is called before the first frame update
-
-    void Awake()
+    public FootballPlayer()
     {
-        MoveComp = new MovementComponent(this, RunningParamName, JumpingParamName,WalkingParamName,80);
-        animator = GetComponent<Animator>();
-        DefenseComp = new DefenseComponent(this, 80);
-        AtackComp = new AttackComponent(this, 80);
+    }
+    void Start()
+    {
+        SetFootballerComponents();
+
+    }
+    private  void StartComponents()
+    {
+  
         MoveComp.StartMoveComp();
         AtackComp.StartAttackComp();
-        driblingZone = GetComponentInChildren<DriblingZone>();
+    }
+
+    private void SetComponents()
+    {
+        MoveComp = new MovementComponent(this, RunningParamName, JumpingParamName, WalkingParamName, 80);
+        DefenseComp = new DefenseComponent(this, 80);
+        AtackComp = new AttackComponent(this, 80);
     }
 
  
@@ -56,4 +67,51 @@ public class FootballPlayer : MonoBehaviour
         if (ball.kepper != this) return false;
         return true;
     }
+    public void SetParamNames(FootballerTextData footballerTextData)
+    {
+        RunningParamName = footballerTextData.RunningParamName;
+        JumpingParamName = footballerTextData.JumpingParamName;
+        WalkingParamName = footballerTextData.WalkingParamName;
+        ShootingParamName =footballerTextData.ShootingParamName;
+
+    }
+    private void SetDriblingZone()
+    {
+        driblingZone = PlayerObject.GetComponent<DriblingZone>();
+       driblingZone.SetOwner(this);
+    }
+
+    private void SetAnimator()
+    {
+        animator = PlayerObject.GetComponent<Animator>();
+    }
+
+    public void SetFootballerComponents()
+    {
+  
+        SetDriblingZone();
+        SetAnimator();
+        SetComponents();
+        StartComponents();
+    }
+
+    public void SetInitialData(GameObject playerModel,FieldPosition fieldPosition)
+    {
+        PlayerModel = playerModel;
+        FieldPosition = fieldPosition;
+
+    }
+
+    public void SetFootballerObject(GameObject gameObject)
+    {
+        PlayerObject = gameObject;
+    }
+
+    public bool IsItMineOponent(FootballPlayer footballPlayer)
+    {
+        if (Team == footballPlayer.Team) return false;
+        return true;
+    }
+
+
 }

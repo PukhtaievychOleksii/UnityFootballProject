@@ -10,19 +10,16 @@ public delegate void KeeperChanged();
 public class Ball : MonoBehaviour
 {
     public Rigidbody rigidBody;
-    public Transform transform;
-    public  Transform RotationPointTransform;
+    public GameObject ballObject;
     public bool IsUnderForceAffect = false;
-    public FootballPlayer kepper = null;
+    public FootballPlayer kepper;
 
     public event KeeperChanged OnKeeperChanged;
     // Start is called before the first frame update
     void Awake()
     {
-        //TODO:doesn't work
+        ballObject = this.GetComponent<GameObject>();
         rigidBody = GetComponent<Rigidbody>();
-        rigidBody.AddForce(new Vector3(0,0,0));
-        transform = GetComponent<Transform>();
     }
     
    
@@ -40,6 +37,11 @@ public class Ball : MonoBehaviour
         kepper = player;
         OnKeeperChanged();
             
+    }
+
+    public void MoveToImmediately(Vector3 Position)
+    {
+        ballObject.transform.position = Position;
     }
 
 

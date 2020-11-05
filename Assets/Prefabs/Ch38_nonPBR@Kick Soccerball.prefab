@@ -931,7 +931,7 @@ GameObject:
   - component: {fileID: 9023721883366973527}
   - component: {fileID: 6253815642425176509}
   - component: {fileID: 6253815642425176508}
-  - component: {fileID: 6253815642425176505}
+  - component: {fileID: 3432876172246080243}
   m_Layer: 0
   m_Name: Ch38_nonPBR@Kick Soccerball
   m_TagString: Untagged
@@ -1010,7 +1010,7 @@ CapsuleCollider:
   m_Height: 1.8140817
   m_Direction: 1
   m_Center: {x: -0, y: 0.89135957, z: 0}
---- !u!114 &6253815642425176505
+--- !u!114 &3432876172246080243
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1019,18 +1019,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 2732533952702299966}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 97cc0eb36e087e94e988090a7a1a7729, type: 3}
+  m_Script: {fileID: 11500000, guid: 761ab01713a55d9429688eeed8d6fa86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RunningParamName: IsRunning
-  JumpingParamName: IsJumping
-  WalkingParamName: IsWalking
-  ShootingParamName: IsShooting
-  animator: {fileID: 0}
-  ball: {fileID: 0}
-  controller: {fileID: 0}
-  EnemiesGates: {fileID: 0}
-  driblingZone: {fileID: 0}
+  driblingPoint: {fileID: 1164709018707023898}
 --- !u!1 &3004340103344032706
 GameObject:
   m_ObjectHideFlags: 0
@@ -1567,7 +1559,6 @@ GameObject:
   - component: {fileID: 8997057191343361711}
   - component: {fileID: 1642604232718879316}
   - component: {fileID: 6253815641486382495}
-  - component: {fileID: 6253815641486382492}
   m_Layer: 0
   m_Name: Ch38_Shorts
   m_TagString: Untagged
@@ -1660,19 +1651,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.5, y: 0.4, z: 1.5}
   m_Center: {x: 0, y: 0.2, z: 0}
---- !u!114 &6253815641486382492
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5367275070850551897}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 761ab01713a55d9429688eeed8d6fa86, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  driblingPoint: {fileID: 1164709018707023898}
 --- !u!1 &5420176588554102208
 GameObject:
   m_ObjectHideFlags: 0
