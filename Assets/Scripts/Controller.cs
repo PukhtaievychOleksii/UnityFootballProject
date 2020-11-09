@@ -2,6 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum ControllerType
+{
+    AIController,
+    PlayerController
+}
+
 public class Controller : MonoBehaviour
 {
     public FootballPlayer m_footballer;
@@ -10,12 +16,11 @@ public class Controller : MonoBehaviour
         
     }
 
-    // Update is called once per frame
     void Update()
     {
         
     }
-    public void SetM_Footballer(FootballPlayer player)
+    public void SetFootballer(ref FootballPlayer player)
     {
         m_footballer = player;
         player.controller = this;

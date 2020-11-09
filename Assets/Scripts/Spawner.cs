@@ -2,18 +2,29 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public struct SpawnData
+public struct SpawnFootballerData
 {
     public GameObject Prefab;
-    public Vector3 Position;
-    public SpawnData(GameObject prefab,Vector3 position)
+    public FieldPosition FieldPosition;
+    public SpawnFootballerData(GameObject prefab,FieldPosition fieldPosition)
     {
         Prefab = prefab;
-        Position = position;
+        FieldPosition = fieldPosition;
     }        
 
 }
 
+public struct SpawnData
+{
+    public GameObject Prefab;
+    public Vector3 Position;
+    public SpawnData(GameObject prefab, Vector3 position)
+    {
+        Prefab = prefab;
+        Position = position;
+    }
+
+}
 public class Spawner : MonoBehaviour
 {
     public GameObject HeroSpawnPoint;
@@ -25,7 +36,6 @@ public class Spawner : MonoBehaviour
     {
         //TODO :  make a prefab with spawner and instantiate it in Game
         game = GetComponent<Game>();
-        game.playerController = GetComponent<PlayerController>();
        // SpawnObjects();
     }
 
@@ -101,26 +111,13 @@ public class Spawner : MonoBehaviour
 
     }
 
-    public void SpawnFootballer(SpawnData spawnData)
+    public FootballPlayer SpawnFootballer(SpawnFootballerData spawnFootballerData)
     {
-        GameObject footballerObject = Instantiate(spawnData.Prefab, spawnData.Position,Quaternion.identity);
-        footballerObject.AddComponent<FootballPlayer>();
-        FootballPlayer footballPlayer = footballerObject.GetComponent<FootballPlayer>();
+        GameObject footballerObject = Instantiate(spawnFootballerData.Prefab, spawnFootballerData.FieldPosition.PositionPoint.transform.position,Quaternion.identity);
+        FootballPlayer footballPlayer = footballerObject.AddComponent<FootballPlayer>();
         footballPlayer.SetFootballerObject(footballerObject);
-        SetEnemiesGate(ref footballPlayer);
-        footballPlayer.SetParamNames(game.footballerTextData);
-        game.footballers.Add(footballPlayer);
+        return footballPlayer;
     }
 
-    private void SetEnemiesGate(ref FootballPlayer player)
-    {
-        float distanceToLeftGates;
-        float distanceToRightGates;
-        distanceToLeftGates = (game.GatesLeft.gameObject.transform.position - player.FieldPosition.PositionPoint.transform.position).magnitude;
-        distanceToRightGates = (game.GatesRight.gameObject.transform.position - player.FieldPosition.PositionPoint.transform.position).magnitude;
-        if (distanceToLeftGates > distanceToRightGates) player.EnemiesGates = game.GatesLeft;
-        else player.EnemiesGates = game.GatesRight;
-        //   Debug.Log("DistanceToLeft: " + distanceToLeftGates + " DistanceToRight: " + distanceToRightGates + " EnemiesGates: " + player.EnemiesGates.name);
-        //Debug.Log(player.transform.position);
-    }
+  
 }

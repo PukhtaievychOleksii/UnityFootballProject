@@ -15,18 +15,18 @@ public class Game : MonoBehaviour
     public Ball  Ball;
     public GameObject BallPrefab;
     public GameObject PlayerPrefab;
-    public PlayerController playerController;
     public GameObject Field;
+    public GameObject BallSpawnPoint;
     public Spawner Spawner;
     public static float  StandartYPosition;
     public Gates GatesLeft;//Right or Left From Camera
     public Gates GatesRight;
     public Factory factory;
     public StateMachine StateMachine;
-    public Tactics tactics;
-    [SerializeField]
-    public FootballerTextData footballerTextData;
+    public TacticsManager TacticsManager;
     public GameObject ControllerCenter;
+    //[SerializeField]
+    public FootballerTextData footballerTextData;
 
     // Start is called before the first frame upda
     private void Awake()
@@ -47,12 +47,11 @@ public class Game : MonoBehaviour
     {
         this.gameObject.AddComponent<Spawner>();
         Spawner = this.gameObject.GetComponent<Spawner>();
-        tactics = GetComponent<Tactics>();
-     //  footballerTextData = GetComponent<FootballerTextData>();
+        TacticsManager = GetComponent<TacticsManager>();
+       footballerTextData = GetComponent<FootballerTextData>();
 
         SpawnObjects();
        
-        playerController = GetComponent<PlayerController>();
         StandartYPosition = Field.transform.position.y;
         StateMachine = new StateMachine(this);
         Ball.OnKeeperChanged += StateMachine.SetStates;
@@ -66,11 +65,16 @@ public class Game : MonoBehaviour
     }
     private void SpawnObjects()
     {
-        Spawner.SpawnBall(new SpawnData(BallPrefab, tactics.BallSpawnPoint.transform.position));
-        Spawner.SpawnFootballer(new SpawnData(PlayerPrefab,tactics.GetAppropriateFieldPostion(FieldPositionShortName.LF1).PositionPoint.transform.position));  
+        Spawner.SpawnBall(new SpawnData(BallPrefab, BallSpawnPoint.transform.position));
+        LoadFootballer(new SpawnFootballerData(PlayerPrefab, TacticsManager.AtackTactics["4-3-3"].GetAppropriateFieldPostion(FieldPositionShortName.GK2)));
     }
 
-   
+    private void LoadFootballer(SpawnFootballerData spawnFootballerData)
+    {
+        FootballPlayer footballPlayer = Spawner.SpawnFootballer(spawnFootballerData);
+        factory.AddFootballer(footballPlayer, footballerTextData, ControllerType.PlayerController, spawnFootballerData.FieldPosition);
+        
+            }
 
 
 

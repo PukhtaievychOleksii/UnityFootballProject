@@ -106,12 +106,17 @@ public class FootballPlayer : MonoBehaviour
     {
         PlayerObject = gameObject;
     }
+    public void SetFielsdPosition(FieldPosition fieldPosition)
+    {
+        FieldPosition = fieldPosition;
+    }
 
     public bool IsItMineOponent(FootballPlayer footballPlayer)
     {
         if (Team == footballPlayer.Team) return false;
         return true;
     }
+
 
 
 }

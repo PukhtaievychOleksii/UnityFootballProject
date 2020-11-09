@@ -73,9 +73,11 @@
     <Compile Include="Assets\SampleScenes\Scripts\SlowMoButton.cs" />
     <Compile Include="Assets\Scripts\AIController.cs" />
     <Compile Include="Assets\Scripts\AtackComponent.cs" />
+    <Compile Include="Assets\Scripts\AtackTactic.cs" />
     <Compile Include="Assets\Scripts\Ball.cs" />
     <Compile Include="Assets\Scripts\Controller.cs" />
     <Compile Include="Assets\Scripts\DefenseComponent.cs" />
+    <Compile Include="Assets\Scripts\DefenseTactic.cs" />
     <Compile Include="Assets\Scripts\DriblingZone.cs" />
     <Compile Include="Assets\Scripts\Factory.cs" />
     <Compile Include="Assets\Scripts\FootballerTextData.cs" />
@@ -92,6 +94,7 @@
     <Compile Include="Assets\Scripts\Spawner.cs" />
     <Compile Include="Assets\Scripts\StateMachine.cs" />
     <Compile Include="Assets\Scripts\Tactics.cs" />
+    <Compile Include="Assets\Scripts\TacticsManager.cs" />
     <None Include="Assets\SampleScenes\Shaders\Skybox-Procedural.shader" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>D:/Programing/Unity/UnityFootballProject/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>

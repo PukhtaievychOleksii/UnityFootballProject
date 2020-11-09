@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public struct FootballerTextData 
+public class FootballerTextData : MonoBehaviour
 {
     public string RunningParamName;
     public string JumpingParamName;

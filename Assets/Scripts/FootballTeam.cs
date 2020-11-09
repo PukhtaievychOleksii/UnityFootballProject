@@ -6,18 +6,25 @@ using UnityEngine.UI;
 public struct TeamParams
 {
     public string Name { get; private set; }
+    public string ShortName { get; private set;}
     public Color UniformColor { get; private set; }
     public Image Emblem { get; private set; }
-}
-public class FootballTeam : MonoBehaviour
-{
-    public List<FootballPlayer> TeamMembers = new List<FootballPlayer>();
-    public TeamParams TeamParameters;
 
     
-    public FootballTeam(TeamParams teamParameters)
+}
+public class FootballTeam 
+{
+    //TODO : ask whether it is better to write ' team.atackComponent = ...' or 'team.SetAtckComponent()'
+    public List<FootballPlayer> TeamMembers = new List<FootballPlayer>();
+    public TeamParams TeamParameters;
+    public AtackTactic AtackTactic;
+    public DefenseTactic DefenseTactic;
+    
+    public FootballTeam(TeamParams teamParameters,AtackTactic atackTactic,DefenseTactic defenseTactic)
     {
         TeamParameters = teamParameters;
+        AtackTactic = atackTactic;
+        DefenseTactic = defenseTactic;
     }
    public void AddTeamMember(FootballPlayer player)
     {

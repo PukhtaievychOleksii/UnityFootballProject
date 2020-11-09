@@ -11,7 +11,7 @@ public class GoalTrigger : MonoBehaviour
         Ball ball = other.GetComponent<Ball>();
         if(ball != null)
         {
-            ball.MoveToImmediately(game.tactics.BallSpawnPoint.transform.position);
+            ball.MoveToImmediately(game.BallSpawnPoint.transform.position);
         }
     }
 }

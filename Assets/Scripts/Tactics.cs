@@ -23,31 +23,22 @@ public struct FieldPosition
     }
 
 }
-public class Tactics : MonoBehaviour
+public class Tactics 
 {
-    public GameObject BallSpawnPoint;
+    public string Name;
     public List<FieldPosition> FieldPositions = new List<FieldPosition>();
     public List<GameObject> SpawnPoints;
-    void Start()
+    public Tactics(List<GameObject> spawnPoints,string name)
     {
-        if (SpawnPoints == null) Debug.LogError("SpawnPoints are not set");
-        SetFieldPositions();
+        SpawnPoints = spawnPoints;
+        Name = name;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+  
 
-    private void SetFieldPositions()
-        //TODO:change Dictionary on Array with GetApropriateFieldPosition
-    {
-        AddFieldPosition(FieldPositions,FieldPositionShortName.LF1,"LeftForward1");
-        
-    }
+    
 
-    private GameObject GetAppropriateSpawnPoint(string PointName)
+    public GameObject GetAppropriateSpawnPoint(string PointName)
     {
         GameObject RequiredSpawnPoint = new GameObject();
         foreach(GameObject spawnPoint in SpawnPoints)
@@ -58,9 +49,9 @@ public class Tactics : MonoBehaviour
         return RequiredSpawnPoint;
     }
 
-    private void AddFieldPosition(List<FieldPosition> fieldPositions,FieldPositionShortName shortName, string fullName)
+    public void AddFieldPosition(FieldPositionShortName shortName, string fullName)
     {
-        fieldPositions.Add(new FieldPosition(shortName, fullName, GetAppropriateSpawnPoint(fullName)));
+        FieldPositions.Add(new FieldPosition(shortName, fullName, GetAppropriateSpawnPoint(fullName)));
     }
 
     public FieldPosition GetAppropriateFieldPostion(FieldPositionShortName shortName)

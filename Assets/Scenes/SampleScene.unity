@@ -282,7 +282,8 @@ GameObject:
   m_Component:
   - component: {fileID: 218780452}
   - component: {fileID: 218780451}
-  - component: {fileID: 218780449}
+  - component: {fileID: 218780450}
+  - component: {fileID: 218780453}
   m_Layer: 0
   m_Name: ComponentHolder
   m_TagString: Untagged
@@ -290,7 +291,7 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &218780449
+--- !u!114 &218780450
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -299,21 +300,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 218780448}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d55b921ab5a1e4a41888b19c37dba987, type: 3}
+  m_Script: {fileID: 11500000, guid: 43a257c6999248a46a6e014073c81a30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BallSpawnPoint: {fileID: 114732114}
-  SpawnPoints:
-  - {fileID: 536172868}
-  - {fileID: 760245547}
-  - {fileID: 526754127}
-  - {fileID: 1023691997}
-  - {fileID: 689143865}
-  - {fileID: 1606571282}
-  - {fileID: 1003423060}
-  - {fileID: 113461069}
-  - {fileID: 739092736}
-  - {fileID: 273632651}
+  RunningParamName: IsRunning
+  JumpingParamName: IsJumping
+  WalkingParamName: IsWalking
+  ShootingParamName: IsShooting
 --- !u!114 &218780451
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -333,13 +326,14 @@ MonoBehaviour:
     type: 3}
   PlayerPrefab: {fileID: 2732533952702299966, guid: f37825b72b7c5874693953b97ad4c359,
     type: 3}
-  playerController: {fileID: 0}
   Field: {fileID: 1368224122}
+  BallSpawnPoint: {fileID: 114732114}
   Spawner: {fileID: 0}
   GatesLeft: {fileID: 1333054291}
   GatesRight: {fileID: 700650595}
-  tactics: {fileID: 0}
-  ControllerCenter: {fileID: 0}
+  TacticsManager: {fileID: 0}
+  ControllerCenter: {fileID: 2024293233}
+  footballerTextData: {fileID: 0}
 --- !u!4 &218780452
 Transform:
   m_ObjectHideFlags: 0
@@ -354,6 +348,29 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &218780453
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 218780448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e35dac2aa0da07f499be632aa72141b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SpawnPoints:
+  - {fileID: 1023691997}
+  - {fileID: 526754127}
+  - {fileID: 536172868}
+  - {fileID: 760245547}
+  - {fileID: 689143865}
+  - {fileID: 739092736}
+  - {fileID: 113461069}
+  - {fileID: 1606571282}
+  - {fileID: 1003423060}
+  - {fileID: 273632651}
 --- !u!1 &266035575
 GameObject:
   m_ObjectHideFlags: 0
@@ -456,7 +473,7 @@ GameObject:
   m_Component:
   - component: {fileID: 273632652}
   m_Layer: 0
-  m_Name: Goalkeeper2
+  m_Name: GoalKeeper2
   m_TagString: Untagged
   m_Icon: {fileID: 4422084297763085224, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -1227,7 +1244,7 @@ GameObject:
   m_Component:
   - component: {fileID: 689143866}
   m_Layer: 0
-  m_Name: Goalkeeper1
+  m_Name: GoalKeeper1
   m_TagString: Untagged
   m_Icon: {fileID: -5442936267250999957, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
