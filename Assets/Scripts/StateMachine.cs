@@ -15,14 +15,14 @@ public class StateMachine
     }
     public void SetStates()
     {
-        foreach(FootballPlayer footballer in game.footballers)
+        foreach(FootballPlayer footballer in game.Footballers)
         {
             UpdateState(footballer);
         }
     }
     private void UpdateState(FootballPlayer footballer)
     {
-        if (game.Ball.kepper.Team != footballer.Team) footballer.CurrentState = States.Defending;
+        if (game.Ball.keeper.VariableParams.Team != footballer.VariableParams.Team) footballer.CurrentState = States.Defending;
         else footballer.CurrentState = States.Atacking;
 
     }

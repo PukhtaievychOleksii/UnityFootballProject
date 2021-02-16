@@ -5,85 +5,41 @@ using UnityEngine;
 using UnityEditor;
 public class PlayerController : Controller
 {
-    // public FootballPlayer footballer;
     private Game game;
-    public List<KeyManager> ActiveKeyList = new List<KeyManager>();
-    
-    private void Awake()
-    {
-       
-    }
+    private List<Command> Commands = new List<Command>();
     void Start()
     {
-        //  footballer = GetComponent<FootballPlayer>();
-        if (!IsM_FootballerFilled()) Debug.LogError("No Footballer In PlayerController");
+        if (!IsControlledFootballerFilled()) Debug.LogError("No Footballer In PlayerController");
         game = GetComponent<Game>();
+        SetCommands();
 
     }
-
-    // Update is called once per frame
     void Update()
     {
-        foreach (KeyManager key_manager in ActiveKeyList) key_manager.KeyManagerUpdate();
-        KeyboardInput();
-        SetKeyManagers();//In update because in Start MoveComponent = null
+        controlledFootballer.MoveComp.SetMovingDataByAxis(Input.GetAxis("Vertical"), Input.GetAxis("Horizontal"));
+        foreach (Command command in Commands) command.Update();
 
     }
-
-    private void KeyboardInput()
+    private void SetCommands()
     {
-        
-        MoveFootballer(Input.GetAxis("Vertical"), Input.GetAxis("Horizontal"));
-        if (Input.GetKeyDown(KeyCode.J)) m_footballer.AtackComp.PassBall(GetTheClosestTeamMate());
-    }
-    
-    public void MoveFootballer(float AxisVert, float AxisHor)
-    {
-        if (!IsM_FootballerFilled()) return;
-        m_footballer.MoveComp.SetMovingDataByAxis(AxisVert, AxisHor);
+        Commands = new List<Command>();
+        AddCommand(new ShootCommandArgs(controlledFootballer.AtackComp.Shoot, KeyCode.G));
+        AddCommand(new PassCommandArgs(controlledFootballer.AtackComp.PassBall, controlledFootballer.GetTheClosestTeamMate,KeyCode.H));
+        AddCommand(new JumpCommandArgs(controlledFootballer.MoveComp.Jump, KeyCode.J));
+        AddCommand(new SprintCommandArgs(controlledFootballer.MoveComp.StartRunning, controlledFootballer.MoveComp.FinishRunning,KeyCode.LeftShift));
+       
        
     }
-   
-    private FootballPlayer GetTheClosestTeamMate()
+    public void AddCommand(CommandArgs commandArgs)
     {
-        FootballPlayer thatPlayer = new FootballPlayer();
-        float distance = 1000;
-        foreach(FootballPlayer footballer in game.footballers)
-        {
-            float our_distance = (m_footballer.transform.position - footballer.transform.position).magnitude;
-
-            if (footballer != m_footballer && our_distance < distance )
-            {
-                distance = our_distance;
-                thatPlayer = footballer;
-            }
-        }
-        return thatPlayer;
-    }
-
-   
-
-    
-    private void SetKeyManagers()
-    {
-       
-        if (!IsM_FootballerFilled() || ActiveKeyList.Count > 0) return;
-      
-        AddKeyManager(new KeyManager(KeyCode.Space, m_footballer.MoveComp.Jump));
-        AddKeyManager(new KeyManager(KeyCode.LeftShift, m_footballer.MoveComp.StartRunning, m_footballer.MoveComp.FinishRunning));
-        AddKeyManager(new KeyManager(KeyCode.G, m_footballer.AtackComp.Shoot));
-    }
-
-    public void ResetKeyManagersForNewFootballer()
-    {
-        ActiveKeyList.Clear();
-        SetKeyManagers();
-    }
-
-    private void AddKeyManager(KeyManager keymanager)
-    {
-        ActiveKeyList.Add(keymanager);
+        Command command = new Command(commandArgs);
+        Commands.Add(command);
     }
     
+    protected override void OnControllersSwaped()
+    {
+        base.OnControllersSwaped();
+        SetCommands();
     }
+}
 

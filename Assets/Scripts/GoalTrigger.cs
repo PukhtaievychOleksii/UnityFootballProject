@@ -5,13 +5,13 @@ using UnityEngine;
 public class GoalTrigger : MonoBehaviour
 {
     public Game game;
-    public Spawner spawner;
     private void OnTriggerEnter(Collider other)
     {
-        Ball ball = other.GetComponent<Ball>();
+        Ball ball = other.GetComponentInParent<Ball>();
         if(ball != null)
         {
-            ball.MoveToImmediately(game.BallSpawnPoint.transform.position);
+            //  ball.MoveToImmediately(game.BallSpawnPoint.transform.position);
+            game.OnGoal();
         }
     }
 }

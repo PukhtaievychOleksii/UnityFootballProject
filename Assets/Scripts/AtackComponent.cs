@@ -16,7 +16,7 @@ public class AttackComponent
     private double goalMistake;//number,according to which,player won't shoot in the aim
     private int mistakeAngle = 15;
         // Start is called before the first frame update
-    public AttackComponent(FootballPlayer player,int AtackSkill)
+    public AttackComponent(FootballPlayer player,float AtackSkill)
     {
 
         this.AtackSkill = AtackSkill;
@@ -33,27 +33,28 @@ public class AttackComponent
  
     public void PassBall(FootballPlayer receivingPlayer)
     {
-        if (owner.ball == null) return;
+        if (!owner.IsBallKepper() || receivingPlayer == null) return;
         
-        Vector3 direction = (receivingPlayer.transform.position - owner.driblingZone.GetDriblingPointPosition()).normalized;
-        float ForceCoef = PhysicHelper.CalculatePassForce(receivingPlayer.transform.position, owner.transform.position, owner.ball.rigidBody.mass);
-            //  PhysicHelper.LookAtByY(owner.gameObject, receivingPlayer.transform.position);
-          //  float angle = PhysicHelper.GetAngleBettwenPlayers(owner.gameObject, receivingPlayer.gameObject);
-            //owner.MoveComp.SetTargetRotation(angle);
+        Vector3 direction = (receivingPlayer.FootballerObject.transform.position - owner.DriblingZone.GetDriblingPointPosition()).normalized;
+        float ForceCoef = PhysicHelper.CalculatePassForce(receivingPlayer.transform.position, owner.transform.position, owner.Ball.rigidBody.mass);
+
+        owner.Ball.HitBall(direction,ForceCoef * 500);
+        if(owner.controller is PlayerController) owner.controller.SwapConntrollers(receivingPlayer);
+
         PhysicHelper.LookAtByY(owner.gameObject, receivingPlayer.gameObject.transform.position);
-        owner.ball.HitBall(direction,ForceCoef * 500);
-        if(owner.controller is PlayerController)  SwapConntrollers(receivingPlayer);
+        PhysicHelper.StopAllPhysicForces(receivingPlayer.FootballerObject.GetComponent<Rigidbody>());
+        owner.MoveComp.StopHero();
     }
 
     public void Shoot(float pressTime)
     {
-        if (owner.ball == null) return;
+        if (!owner.IsBallKepper()) return;
         Vertical_InGates_Position shootHighness =  CalculateShootHigh(pressTime);
         ShootAim shootAim = GetShootAim(shootHighness,owner.transform.rotation);
-        Vector3 shootDirection = shootAim.AimObject.transform.position - owner.ball.transform.position;
+        Vector3 shootDirection = shootAim.AimObject.transform.position - owner.Ball.transform.position;
         UseGoalMistake(ref shootDirection);
         // owner.m_animator.SetTrigger(owner.ShootingParamName);
-        owner.ball.HitBall(shootDirection,150);
+        owner.Ball.HitBall(shootDirection,150);
         
     }
   
@@ -75,23 +76,23 @@ public class AttackComponent
         Vector3 quaternionEulerAngles = targetRotation.eulerAngles;
         float rotationAngle = quaternionEulerAngles.y;
 
-        if (owner.EnemiesGates.name == "GatesLeft")
+        if (owner.VariableParams.Team.GatesToAtack.name == "GatesLeft")
         {
-            if (Math.Abs(rotationAngle - Game.RotationDirections["Up"].eulerAngles.y) < owner.ApproximetlyMistakeValue || Math.Abs(rotationAngle - Game.RotationDirections["Up-Left"].eulerAngles.y) < owner.ApproximetlyMistakeValue) horizontalAimPosition = Horizontal_InGates_Position.Right;
-            if (Math.Abs(rotationAngle - Game.RotationDirections["Left"].eulerAngles.y) < owner.ApproximetlyMistakeValue) horizontalAimPosition = Horizontal_InGates_Position.Center;
-            if (Math.Abs(rotationAngle - Game.RotationDirections["Down-Left"].eulerAngles.y) < owner.ApproximetlyMistakeValue || Math.Abs(rotationAngle - Game.RotationDirections["Down"].eulerAngles.y) < owner.ApproximetlyMistakeValue)
+            if (Math.Abs(rotationAngle - Game.RotationDirections["Up"].eulerAngles.y) < owner.ApproximetlyAngleMistakeValue || Math.Abs(rotationAngle - Game.RotationDirections["Up-Left"].eulerAngles.y) < owner.ApproximetlyAngleMistakeValue) horizontalAimPosition = Horizontal_InGates_Position.Right;
+            if (Math.Abs(rotationAngle - Game.RotationDirections["Left"].eulerAngles.y) < owner.ApproximetlyAngleMistakeValue) horizontalAimPosition = Horizontal_InGates_Position.Center;
+            if (Math.Abs(rotationAngle - Game.RotationDirections["Down-Left"].eulerAngles.y) < owner.ApproximetlyAngleMistakeValue || Math.Abs(rotationAngle - Game.RotationDirections["Down"].eulerAngles.y) < owner.ApproximetlyAngleMistakeValue)
             {
                 horizontalAimPosition = Horizontal_InGates_Position.Left;
             }
         }
-        if(owner.EnemiesGates.name == "GatesRight")
+        if(owner.VariableParams.Team.GatesToAtack.name == "GatesRight")
         {
-            if (Math.Abs(rotationAngle - Game.RotationDirections["Up"].eulerAngles.y) < owner.ApproximetlyMistakeValue || Math.Abs(rotationAngle - Game.RotationDirections["Up-Right"].eulerAngles.y) < owner.ApproximetlyMistakeValue) horizontalAimPosition = Horizontal_InGates_Position.Left;
-            if (Math.Abs(rotationAngle - Game.RotationDirections["Right"].eulerAngles.y) < owner.ApproximetlyMistakeValue) horizontalAimPosition = Horizontal_InGates_Position.Center;
-            if (Math.Abs(rotationAngle - Game.RotationDirections["Down-Right"].eulerAngles.y) < owner.ApproximetlyMistakeValue || Math.Abs(rotationAngle - Game.RotationDirections["Down"].eulerAngles.y) < owner.ApproximetlyMistakeValue) horizontalAimPosition = Horizontal_InGates_Position.Right;
+            if (Math.Abs(rotationAngle - Game.RotationDirections["Up"].eulerAngles.y) < owner.ApproximetlyAngleMistakeValue || Math.Abs(rotationAngle - Game.RotationDirections["Up-Right"].eulerAngles.y) < owner.ApproximetlyAngleMistakeValue) horizontalAimPosition = Horizontal_InGates_Position.Left;
+            if (Math.Abs(rotationAngle - Game.RotationDirections["Right"].eulerAngles.y) < owner.ApproximetlyAngleMistakeValue) horizontalAimPosition = Horizontal_InGates_Position.Center;
+            if (Math.Abs(rotationAngle - Game.RotationDirections["Down-Right"].eulerAngles.y) < owner.ApproximetlyAngleMistakeValue || Math.Abs(rotationAngle - Game.RotationDirections["Down"].eulerAngles.y) < owner.ApproximetlyAngleMistakeValue) horizontalAimPosition = Horizontal_InGates_Position.Right;
         }
-        shootAim = owner.EnemiesGates.GetApropriateShootAim(verticalAimPosition, horizontalAimPosition);
-        float distanceToAim = (shootAim.AimObject.transform.position - owner.ball.transform.position).magnitude;
+        shootAim = owner.VariableParams.Team.GatesToAtack.GetApropriateShootAim(verticalAimPosition, horizontalAimPosition);
+        float distanceToAim = (shootAim.AimObject.transform.position - owner.Ball.transform.position).magnitude;
        // if (distanceToAim > 15) shootAim = owner.EnemiesGates.GetApropriateShootAim(Vertical_InGates_Position.PoGorobcyam, Horizontal_InGates_Position.Center);
         return shootAim;
     }
@@ -126,15 +127,5 @@ public class AttackComponent
 
     }
 
-    private void SwapConntrollers(FootballPlayer secondPlayer)
-    {
-        PlayerController initialPlayerController = (PlayerController)owner.controller;
-        initialPlayerController.m_footballer = secondPlayer;
-        secondPlayer.controller = initialPlayerController;
-        initialPlayerController.ResetKeyManagersForNewFootballer();
-
-        owner.MoveComp.StopHero();
-        owner.controller = new AIController(owner);
-       
-    }
+ 
 }

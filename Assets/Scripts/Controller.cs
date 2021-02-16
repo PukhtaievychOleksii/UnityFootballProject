@@ -10,7 +10,7 @@ public enum ControllerType
 
 public class Controller : MonoBehaviour
 {
-    public FootballPlayer m_footballer;
+    public FootballPlayer controlledFootballer;
     void Start()
     {
         
@@ -20,15 +20,30 @@ public class Controller : MonoBehaviour
     {
         
     }
-    public void SetFootballer(ref FootballPlayer player)
+    public void SetFootballer(FootballPlayer player)
     {
-        m_footballer = player;
-        player.controller = this;
+        controlledFootballer = player;
     }
-    protected bool IsM_FootballerFilled()
+    protected bool IsControlledFootballerFilled()
     {
-        if (m_footballer == null) return false;
-        if (m_footballer.MoveComp == null || m_footballer.AtackComp == null || m_footballer.DefenseComp == null) return false;
+        if (controlledFootballer == null) return false;
+        if (controlledFootballer.MoveComp == null || controlledFootballer.AtackComp == null || controlledFootballer.DefenseComp == null) return false;
         return true;
+    }
+    public void SwapConntrollers(FootballPlayer otherPlayer)
+    {
+        otherPlayer.controller.SetControlledFootballer(controlledFootballer);
+        SetControlledFootballer(otherPlayer);
+        OnControllersSwaped();
+    }
+
+    public void SetControlledFootballer(FootballPlayer footballPlayer)
+    {
+        controlledFootballer = footballPlayer;
+        footballPlayer.controller = this;
+    }
+    protected virtual void OnControllersSwaped()
+    {
+
     }
 }

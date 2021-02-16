@@ -1,42 +1,48 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-[RequireComponent(typeof(Animator))]
+//[RequireComponent(typeof(Animator))]
+public struct FootballerVariableParams {
+   public string Name;
+   public FootballTeam Team;
+   public ControllerType ControllerType;
+   public  FieldPosition FieldPosition;
+   public float DefenseSkill;
+   public float AtackSkill;
+   public  float MoveSkill;
+    public FootballerVariableParams(string name,FootballTeam team,ControllerType controllerType,FieldPosition fieldPosition,float defenseSkill,float atackSkill,float moveSkill)
+    {
+        Name = name;
+        Team = team;
+        FieldPosition = fieldPosition;
+        ControllerType = controllerType;
+        DefenseSkill = defenseSkill;
+        AtackSkill = atackSkill;
+        MoveSkill = moveSkill;
+    }
+
+}
+
 public class FootballPlayer : MonoBehaviour
 {
 
-    
-  
+
+    public FootballerVariableParams VariableParams;
     public MovementComponent MoveComp;
     public AttackComponent AtackComp;
     public DefenseComponent DefenseComp;
-    public GameObject PlayerModel;
-    public GameObject PlayerObject;
-    public string RunningParamName;
-    public string JumpingParamName;
-    public string WalkingParamName;
-    public string ShootingParamName;
+    public GameObject FootballerObject;
+    public FootballerConstantData ConstantData;
     public Animator animator;
-    public Ball ball = null;
+    public Ball Ball = null;
     public Controller controller;
-    public Gates EnemiesGates;
-    public DriblingZone driblingZone;
-    public FootballPlayer currentOpponent = null;
-    public float ApproximetlyMistakeValue = 2;//use to check whether angels are equal
-    public FootballTeam Team;
-    public FieldPosition FieldPosition;
+    public DriblingZone DriblingZone;
+    public float ApproximetlyAngleMistakeValue = 2;//use to check whether angels are equal
     public States CurrentState = States.Defending;
 
 
-
-    public FootballPlayer()
-    {
-    }
-    void Start()
-    {
-        SetFootballerComponents();
-
-    }
+  
+    
     private  void StartComponents()
     {
   
@@ -44,11 +50,11 @@ public class FootballPlayer : MonoBehaviour
         AtackComp.StartAttackComp();
     }
 
-    private void SetComponents()
+    private void SetSkillComponents(float DefenseSkill,float AtackSkill,float MoveSkill)
     {
-        MoveComp = new MovementComponent(this, RunningParamName, JumpingParamName, WalkingParamName, 80);
-        DefenseComp = new DefenseComponent(this, 80);
-        AtackComp = new AttackComponent(this, 80);
+        MoveComp = new MovementComponent(this, ConstantData.RunningParamName,ConstantData.JumpingParamName,ConstantData.WalkingParamName,MoveSkill);
+        DefenseComp = new DefenseComponent(this,FootballerConstantData.DefaultDefendingRadius,DefenseSkill);
+        AtackComp = new AttackComponent(this,AtackSkill);
     }
 
  
@@ -63,27 +69,23 @@ public class FootballPlayer : MonoBehaviour
 
     public bool IsBallKepper()
     {
-        if (ball == null) return false;
-        if (ball.kepper != this) return false;
+        if (Ball == null || Ball.keeper == null|| Ball.keeper != this) return false;
         return true;
     }
-    public void SetParamNames(FootballerTextData footballerTextData)
+    public void SetInitialParameters(FootballerConstantData footballerConstantData)
     {
-        RunningParamName = footballerTextData.RunningParamName;
-        JumpingParamName = footballerTextData.JumpingParamName;
-        WalkingParamName = footballerTextData.WalkingParamName;
-        ShootingParamName =footballerTextData.ShootingParamName;
+        ConstantData = footballerConstantData;
 
     }
     private void SetDriblingZone()
     {
-        driblingZone = PlayerObject.GetComponent<DriblingZone>();
-       driblingZone.SetOwner(this);
+        DriblingZone = FootballerObject.GetComponent<DriblingZone>();
+       DriblingZone.SetOwner(this);
     }
 
     private void SetAnimator()
     {
-        animator = PlayerObject.GetComponent<Animator>();
+        animator = FootballerObject.GetComponent<Animator>();
     }
 
     public void SetFootballerComponents()
@@ -91,32 +93,52 @@ public class FootballPlayer : MonoBehaviour
   
         SetDriblingZone();
         SetAnimator();
-        SetComponents();
         StartComponents();
     }
 
-    public void SetInitialData(GameObject playerModel,FieldPosition fieldPosition)
-    {
-        PlayerModel = playerModel;
-        FieldPosition = fieldPosition;
-
-    }
 
     public void SetFootballerObject(GameObject gameObject)
     {
-        PlayerObject = gameObject;
-    }
-    public void SetFielsdPosition(FieldPosition fieldPosition)
-    {
-        FieldPosition = fieldPosition;
+        FootballerObject = gameObject;
     }
 
     public bool IsItMineOponent(FootballPlayer footballPlayer)
     {
-        if (Team == footballPlayer.Team) return false;
+        if (VariableParams.Team == footballPlayer.VariableParams.Team) return false;
         return true;
     }
 
+    public void SetFieldPosition(FieldPosition fieldPosition)
+    {
+       VariableParams.FieldPosition = fieldPosition;
+    }
+
+    public FootballPlayer GetTheClosestTeamMate()
+    {
+        FootballPlayer TheClosestTeamMate = new FootballPlayer();
+        float distance = 1000;
+        foreach (FootballPlayer footballer in VariableParams.Team.Members)
+        {
+            if (footballer == this) continue;
+            float our_distance = (FootballerObject.transform.position - footballer.transform.position).magnitude;
+
+            if (our_distance < distance)
+            {
+                distance = our_distance;
+                TheClosestTeamMate = footballer;
+            }
+        }
+        return TheClosestTeamMate;
+    }
+
+  
+
+    public void SetVariableParams(FootballerVariableParams variableParams)
+    {
+        VariableParams = variableParams;
+        variableParams.Team.AddTeamMember(this);
+        SetSkillComponents(variableParams.DefenseSkill, variableParams.AtackSkill, variableParams.MoveSkill);
+    }
 
 
 }

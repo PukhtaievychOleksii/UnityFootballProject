@@ -5,10 +5,12 @@ using UnityEngine;
 public enum DriblingType
 {
     SlowKeep,
-    FastHits
+    FastKeep
 };
 public class MovementComponent
 {
+    //constants
+    private const float  DistanceForDestinating = (float)1.1;
     public Vector3 WorldVelocity;
     //speed values
     public float speed = 0;
@@ -17,11 +19,13 @@ public class MovementComponent
     private float WalkingSpeed;
     private float RunningSpeed;
     private float targetSpeed = 0;
+    private Vector3 DestinationPoint;
+    private Vector3 NullVector = new Vector3(0, 0, 0);
+    private bool GotToDestination = true;
     //rotation values
-    private Quaternion rotation;
+    private Quaternion rotation = Quaternion.Euler(0,0,0);
     private float angularSpeed;//graduses per second
     private Quaternion targetRotation;
-    private Vector3? destination;
     private int rotationCorrector = -1;
     //dribling values
     public bool IsDribling;
@@ -30,20 +34,21 @@ public class MovementComponent
     private string RunningParamName;
     private string JumpingParamName;
     private string WalkingParamName;
-    private FootballPlayer footballPlayer;//Use values from 1 to 10
+    private FootballPlayer owner;//Use values from 1 to 10
     public float MoveSkill = 0;
     //BOOL VALUES
     public bool IsRunning;
-    private bool IsNewRotate = true;
     //acceleration values
     private float accelerationValue;
     //Events
     public delegate void DirectionChange();
     public event DirectionChange DirectionChanged;
+
+    
     
     public MovementComponent(FootballPlayer player, string RunningParamName, string JumpingParamName, string WalkingParamName,float MoveSkill)
     {
-        footballPlayer = player;
+        owner = player;
         this.RunningParamName = RunningParamName;
         this.JumpingParamName = JumpingParamName;
         this.WalkingParamName = WalkingParamName;
@@ -53,7 +58,7 @@ public class MovementComponent
 
     public void StartMoveComp()
     {
-        destination = null;
+        DestinationPoint = NullVector;
        // m_animator.SetBool(m_RunningParamName, false);
         accelerationValue = MoveSkill / 10;
         maxSpeed = MoveSkill;
@@ -61,38 +66,35 @@ public class MovementComponent
         RunningSpeed = MoveSkill;
         WalkingSpeed = RunningSpeed * 3 / 4;
        
-        rotation = footballPlayer.PlayerObject.transform.rotation;
-        WorldVelocity = footballPlayer.PlayerObject.transform.forward;
-        targetRotation = footballPlayer.PlayerObject.transform.rotation;
+        rotation = owner.FootballerObject.transform.rotation;
+        WorldVelocity = owner.FootballerObject.transform.forward;
+        targetRotation = owner.FootballerObject.transform.rotation;
         DirectionChanged += SetRotationCorrector;
     }
 
-    // Update is called once per frame
     public void UpdateMove()
     {
-        //NOT TO CHANGE THE ORDER
-        /* TODO:may be ficha 
-        if (ShouldChangeRotation() && IsNewRotate) OnDirectionChanged(); */
         CheckHeroStop();
+        CheckWayToDestination();
         GoTo();
-    //    Debug.Log(rotation.eulerAngles.y);
-
     }
 
-    public void MoveToPoint(Vector3 destination)
+    private void CheckWayToDestination()
     {
-        this.destination = destination;
-        footballPlayer.animator.SetBool(RunningParamName, true);
-        WorldVelocity = (this.destination - footballPlayer.transform.position).Value.normalized;
-
-        // footballer.transform.LookAt(destination);
-        //footballer.transform.Translate(destination);
+        if (GotToDestination) return;
+        float distance = (DestinationPoint - owner.transform.position).magnitude;
+        if (distance <= DistanceForDestinating)
+        {
+            GotToDestination = true;
+            FinishRunning();
+        }
     }
+
     private void GoTo()
     {
         CorrectSpeed();
         RotateFootballer();
-        footballPlayer.transform.position += WorldVelocity * speed / 60;
+       /* if(!ShouldChangeRotation())*/ owner.transform.position += WorldVelocity * speed / 60;//rotate than run
 
     }
 
@@ -147,7 +149,7 @@ public class MovementComponent
     {
         if (targetSpeed < 0.1 && speed != 0)
         {
-           footballPlayer.animator.SetBool(WalkingParamName, false);
+           owner.animator.SetBool(WalkingParamName, false);
           //  m_speed = 0;
             targetSpeed = 0;
             
@@ -157,16 +159,14 @@ public class MovementComponent
 
     public void Jump()
     {
-       footballPlayer.animator.SetTrigger(JumpingParamName);
-        // m_animator.SetTrigger(m_JumpingParamName);
+       owner.animator.SetTrigger(JumpingParamName);
     }
 
     public void StopHero()
     {
         targetSpeed = 0;
-        footballPlayer.animator.SetBool(WalkingParamName, false);
-        footballPlayer.animator.SetBool(RunningParamName, false);
-        IsNewRotate = true;//for
+        owner.animator.SetBool(WalkingParamName, false);
+        owner.animator.SetBool(RunningParamName, false);
     }
   private void CorrectSpeed()
     {
@@ -192,11 +192,10 @@ public class MovementComponent
     private void RotateFootballer()
     {
         SetRotationCorrector();
-        if (!ShouldChangeRotation())
-        {
-            IsNewRotate = true;
-            return;
-        }
+
+
+        if (!ShouldChangeRotation()) return;
+        
         
         float angleCanPass = angularSpeed / 60;
         float angleToPass = Math.Abs(rotation.eulerAngles.y - targetRotation.eulerAngles.y);
@@ -206,20 +205,26 @@ public class MovementComponent
             angleCanPass = angleToPass;
         }
         rotation =Quaternion.Euler(0,rotation.eulerAngles.y + angleCanPass * rotationCorrector, 0);
-        footballPlayer.transform.rotation = rotation;
-        WorldVelocity = footballPlayer.transform.forward;        
+        owner.transform.rotation = rotation;
+        WorldVelocity = owner.transform.forward;        
 
     }
     private void StartWalking()
     {
         targetSpeed = WalkingSpeed;
-        footballPlayer.animator.SetBool(WalkingParamName, true);
+        owner.animator.SetBool(WalkingParamName, true);
+    }
+    private void FinishWalking()
+    {
+        owner.animator.SetBool(WalkingParamName, false);
+        targetSpeed = 0;
+
     }
     public void StartRunning()
     {
         targetSpeed = RunningSpeed;
-        footballPlayer.animator.SetBool(RunningParamName, true);
-        if (driblingType != null) driblingType = DriblingType.FastHits;
+        owner.animator.SetBool(RunningParamName, true);
+        if (driblingType != null) driblingType = DriblingType.FastKeep;
         IsRunning = true;
     }
 
@@ -228,9 +233,10 @@ public class MovementComponent
     public void FinishRunning()
     {
         
-        footballPlayer.animator.SetBool(RunningParamName, false);
+        owner.animator.SetBool(RunningParamName, false);
         if (driblingType != null) driblingType = DriblingType.SlowKeep;
         IsRunning = false;
+        // FinishWalking();
         StartWalking();
     }
 
@@ -243,19 +249,17 @@ public class MovementComponent
     private bool ShouldChangeRotation()
     {
         float angleBetween = Mathf.Abs(rotation.eulerAngles.y - targetRotation.eulerAngles.y);
-       // Debug.Log(angleBetween);
 
-        if (angleBetween > footballPlayer.ApproximetlyMistakeValue && angleBetween < 360 - footballPlayer.ApproximetlyMistakeValue)
+        if (angleBetween > owner.ApproximetlyAngleMistakeValue && angleBetween < 360 - owner.ApproximetlyAngleMistakeValue)
         {
             return true;
         }
         return false;
     }
 
-    private void SetRotationTarget(float AxisVert,float AxisHor)
+    private void SetRotationTargetByAxis(float AxisVert,float AxisHor)
     {
         targetRotation = CalculateRotation(AxisVert, AxisHor);
-       // Debug.Log(" TargetRotation:" + targetRotation.eulerAngles.y + " MyRotation:" + m_rotation.eulerAngles.y + "ObjectRotation:" + owner.transform.rotation.eulerAngles.y + " ShouldChangeRotation:" + ShouldChangeRotation());
     }
     private void SetSpeedByAxis(float AxisVert,float AxisHor)
     {
@@ -264,7 +268,7 @@ public class MovementComponent
     }
     public void SetMovingDataByAxis(float AxisVert,float AxisHor)
     {
-        SetRotationTarget(AxisVert, AxisHor);
+        SetRotationTargetByAxis(AxisVert, AxisHor);
         SetSpeedByAxis(AxisVert, AxisHor);
     }
 
@@ -273,11 +277,7 @@ public class MovementComponent
         float m_angle = rotation.eulerAngles.y;
         float target_angle = targetRotation.eulerAngles.y;
         float angleToPass = Mathf.Abs(m_angle - target_angle);
-       /* if (m_angle > target_angle && angleToPass < 180) rotationCorrector = -1;
-        if (m_angle > target_angle && angleToPass > 180) rotationCorrector = 1;
-        if (m_angle < target_angle && angleToPass < 180) rotationCorrector = 1;
-        
-        if (m_angle < target_angle && angleToPass > 180) rotationCorrector = -1;*/
+   
         if(m_angle > target_angle)
         {
             if (angleToPass < 180) rotationCorrector = -1;
@@ -292,21 +292,31 @@ public class MovementComponent
     }
     public void OnDirectionChanged()
     {
-        if(DirectionChanged != null)
-        {
-            DirectionChanged();
-            IsNewRotate = false;
-           // Debug.Log("CurrentRotation" + m_rotation.eulerAngles.y + " TargetRotation:" + targetRotation.eulerAngles.y);
-        }
+        DirectionChanged?.Invoke();
     }
-    public void SetTargetRotation(float angle)
-    {
-        targetRotation = Quaternion.Euler(0,angle,0);
-    }
+    
     public void SetSkillLevel(float skillLevel)
     {
         MoveSkill = skillLevel;
     }
 
-    
+    public void RunToPoint(Vector3 point)
+    {
+        if (DestinationPoint == point || !GotToDestination) return;
+        LookAtPoint(point);
+        StartRunning();
+        DestinationPoint = point;
+        GotToDestination = false;
+    }
+
+    public void LookAtPoint(Vector3 point)
+    {
+        Vector3 mainPoint = owner.transform.position;
+        Vector3 sidePoint = point;
+        targetRotation = Quaternion.LookRotation(sidePoint - mainPoint);
+        
+    }
+
+  
+
 }

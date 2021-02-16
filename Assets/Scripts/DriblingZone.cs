@@ -5,19 +5,16 @@ using UnityEngine;
 public class DriblingZone : MonoBehaviour
 {
     private FootballPlayer owner;
-    private Ball ball;
+    private const float FastKeepMultiplier = 650f;
     private float dribllingRadius = 0.1f;
     public GameObject driblingPoint;
     private BoxCollider zone;
     private float timeBettwenGatherTrials = 0;
     private float standartTimeBettwenGathersTrials = 1f;
 
-    // Start is called before the first frame update
     void Start()
     {
         zone = GetComponent<BoxCollider>();
-        
-        
     }
     public void SetOwner(FootballPlayer footballPlayer)
     {
@@ -25,30 +22,36 @@ public class DriblingZone : MonoBehaviour
     }
     private void Update()
     {
-        //TODO:Drible();
-        if(!IsITheBallKepper()) timeBettwenGatherTrials += Time.deltaTime;
+        if (owner.IsBallKepper() && !owner.Ball.IsUnderForceAffect)
+        {
+            Drible();
+        }
+        else 
+        {
+            timeBettwenGatherTrials += Time.deltaTime;
+        }
+
 
     }
 
-    private void OnTriggerEnter(Collider other)
+    public void OnTriggerEnter(Collider other)
     {
-        Ball ball = other.GetComponent<Ball>();
+        Ball ball = other.gameObject.GetComponentInParent<Ball>();
         if (ball == null) return;
-        if (IsBallWithoutKepper()) ball.ChangeKeeper(owner);
-        SetTimeBettwenStealTrials();
-        ball = this.ball;
+        if (ball.IsWithoutKeeper()) ball.ChangeKeeper(owner);
         //Stop All Forces
         PhysicHelper.StopAllPhysicForces(ball.rigidBody/*ball.gameObject.GetComponent<Rigidbody>()*/);
-        owner.ball.IsUnderForceAffect = false;
+        PhysicHelper.StopAllPhysicForces(owner.FootballerObject.GetComponent<Rigidbody>());
+        owner.Ball.IsUnderForceAffect = false;
         SetDriblingType();    
         
     }
     private void OnTriggerStay(Collider other)
     {
-        Ball ball = other.GetComponent<Ball>();
+        Ball ball = other.GetComponentInParent<Ball>();
         if (ball != null)
         {
-            if (IsBallWithoutKepper() || IsSuitConditionsToSteal())
+            if (ball.IsWithoutKeeper() || AreSuitConditionsToSteal())
 
             {
                 owner.DefenseComp.TryStealBall();
@@ -60,11 +63,11 @@ public class DriblingZone : MonoBehaviour
     }
     private void OnTriggerExit(Collider other)
     {
-        Ball ball = other.GetComponent<Ball>();
+        Ball ball = other.GetComponentInParent<Ball>();
         if (ball != null)
         {
-            if (ball.kepper == owner) ball.kepper = null;
-            owner.ball = null;
+            //  TODO : problem wright here
+            if (ball.keeper == owner) ball.keeper = null;
             owner.MoveComp.driblingType = null;
 
         }
@@ -72,27 +75,28 @@ public class DriblingZone : MonoBehaviour
 
 
 
-    private void CheckBallInZone()
+    private void KeepBallInDribleZone()
     {
-        float distance = (owner.ball.transform.position - driblingPoint.transform.position).magnitude;
+        float distance = (owner.Ball.transform.position - driblingPoint.transform.position).magnitude;
         if(distance > dribllingRadius)
         {
-            owner.ball.transform.position = driblingPoint.transform.position;/*zone.transform.TransformPoint(zone.center) + owner.transform.forward * 0.2f + owner.transform.up * 0.1f;*/
+            owner.Ball.ShiftToPoint(driblingPoint.transform.position);
+           // owner.Ball.transform.position = driblingPoint.transform.position;/*zone.transform.TransformPoint(zone.center) + owner.transform.forward * 0.2f + owner.transform.up * 0.1f;*/
         }
         
     }
 
     private void Drible()
     {
-
-        if (AreValuesSet())
+        if (owner.MoveComp.driblingType == DriblingType.SlowKeep)
         {
-            if (owner.MoveComp.driblingType == DriblingType.SlowKeep) CheckBallInZone();
-            else if (owner.MoveComp.driblingType == DriblingType.FastHits)
-            {
-                owner.ball.HitBall(owner.transform.forward, 500);
-            }
+            KeepBallInDribleZone();
         }
+        else if (owner.MoveComp.driblingType == DriblingType.FastKeep)
+        {
+            owner.Ball.HitBall(owner.transform.forward, FastKeepMultiplier);
+        }
+        
     }
 
     public Vector3 GetDriblingPointPosition()
@@ -102,7 +106,7 @@ public class DriblingZone : MonoBehaviour
 
     private void SetDriblingType()
     {
-        if (owner.MoveComp.IsRunning) owner.MoveComp.driblingType = DriblingType.FastHits;
+        if (owner.MoveComp.IsRunning) owner.MoveComp.driblingType = DriblingType.FastKeep;
         else
         {
             owner.MoveComp.driblingType = DriblingType.SlowKeep;
@@ -110,11 +114,7 @@ public class DriblingZone : MonoBehaviour
     }
 
 
-    private bool IsBallWithoutKepper()
-    {
-        if (owner.ball != null && owner.ball.kepper == null) return true;
-        return false;
-    }
+  
 
     private bool IsTimeBettwenGatherTrialBigEnough()//Here,because there is no Update in DefenseComponentClass
     {
@@ -126,43 +126,22 @@ public class DriblingZone : MonoBehaviour
         return false;
     }
 
-    private bool IsITheBallKepper()
-    {
-        if (owner.ball == null || owner.ball.kepper == null || owner.ball.kepper != owner)
-        {
-
-            return false;
-        }
-        return true;
-    }
+ 
 
     public void BallWasStolen()
     {
         timeBettwenGatherTrials = 0;
     }
 
-    private bool IsSuitConditionsToSteal()
+    private bool AreSuitConditionsToSteal()
     {
-        if (IsITheBallKepper()) return false;
-        else if(owner.ball.kepper != null && owner.IsItMineOponent(owner.ball.kepper)) owner.currentOpponent = owner.ball.kepper;
-        if (IsTimeBettwenGatherTrialBigEnough()) return true;
+        if ( IsTimeBettwenGatherTrialBigEnough()) return true;
         return false;
 
     }
-    private void SetTimeBettwenStealTrials()
-    {
-        if (owner.currentOpponent != null && owner.ball != null && owner.ball.kepper != null)
-        {
-            if (owner.ball.kepper != owner.currentOpponent) timeBettwenGatherTrials = standartTimeBettwenGathersTrials;
-        }
-    }
 
-    private bool AreValuesSet()
-    {
-        if (owner.ball == null) return false;
-        if (!PhysicHelper.IsOnGround(owner.gameObject)) return false;
-        if (owner.ball.IsUnderForceAffect) return false;
-        if (owner.ball.kepper != owner) return false;
-        return true;
-    }
+
+    
+
+  
 }

@@ -57,4 +57,11 @@ public  static class PhysicHelper
         rigidBody.isKinematic = false;
     }
    
+    public static float GetVectorScalarMultiplication(Vector3 a,Vector3 b)
+    {
+        float result;
+        result = a.x * b.x + a.y * b.y + a.z * b.z;
+        return result;
+    }
+    
 }

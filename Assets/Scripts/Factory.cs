@@ -11,31 +11,25 @@ public class Factory
     {
         this.game = game;
     }
-    public void AddFootballer(FootballPlayer footballPlayer,FootballerTextData footballerTextData,ControllerType controllerType,FieldPosition fieldPosition)
+    public void AddFootballer(FootballPlayer footballPlayer,FootballerVariableParams footballerVariableParams,FootballerConstantData footballerInitialData,Ball Ball)
     {
-
+        footballPlayer.Ball = Ball;
+        footballPlayer.SetInitialParameters(footballerInitialData);
+        footballPlayer.SetVariableParams(footballerVariableParams);
         footballPlayer.SetFootballerComponents();
-        footballPlayer.SetFielsdPosition(fieldPosition);
-        SetEnemiesGate(ref footballPlayer);
-        footballPlayer.SetParamNames(footballerTextData);
-        AddController(ref footballPlayer, controllerType);
-        game.footballers.Add(footballPlayer);
+        AddController(ref footballPlayer, footballerVariableParams.ControllerType);
+        game.Footballers.Add(footballPlayer);
     }
 
-    public void AddTeam(TeamParams teamParameters,AtackTactic atackTactic,DefenseTactic defenseTactic)
+    public void AddTeam(TeamParams teamParameters,Tactic tactic)
     {
-        FootballTeam team = new FootballTeam(teamParameters, atackTactic, defenseTactic);
-        game.Teams.Add(teamParameters.ShortName, team);
+        FootballTeam team = new FootballTeam(teamParameters, tactic);
+        SetAppropriateGates(team);
+        team.SetOponents(game.Footballers);
+        game.Teams.Add(teamParameters.Name, team);
     }
 
-    /*  public void AddController<TControllerType>(FootballPlayer actor,TControllerType controllerType) where TController : Controller
-      {
-       if(controllerType is Controller)
-          {
-
-          }  
-      }
-      */
+  
     public void AddController(ref FootballPlayer actor, ControllerType controllerType)/* where TController : Controller*/
     {
         
@@ -47,23 +41,13 @@ public class Factory
         {
             controller = game.ControllerCenter.AddComponent<AIController>();
         }
-        controller.SetFootballer(ref actor);
+        controller.SetFootballer(actor);
+        actor.controller = controller;
     }
-
-    private void SetEnemiesGate(ref FootballPlayer player)
+    private void SetAppropriateGates(FootballTeam footballTeam)
     {
-        float distanceToLeftGates;
-        float distanceToRightGates;
-       // distanceToLeftGates = (game.GatesLeft.gameObject.transform.position - player.FieldPosition.PositionPoint.transform.position).magnitude;
-        Vector3 a = game.GatesLeft.gameObject.transform.position;
-        Vector3 b = player.FieldPosition.PositionPoint.transform.position;
-        distanceToLeftGates = (a - b).magnitude;
-        distanceToRightGates = (game.GatesRight.gameObject.transform.position - player.FieldPosition.PositionPoint.transform.position).magnitude;
-        if (distanceToLeftGates > distanceToRightGates) player.EnemiesGates = game.GatesLeft;
-        else player.EnemiesGates = game.GatesRight;
-        //   Debug.Log("DistanceToLeft: " + distanceToLeftGates + " DistanceToRight: " + distanceToRightGates + " EnemiesGates: " + player.EnemiesGates.name);
-        //Debug.Log(player.transform.position);
+        if (footballTeam.FieldSide == FieldSide.Left) footballTeam.SetGates(game.GatesLeft, game.GatesRight);
+        if (footballTeam.FieldSide == FieldSide.Right) footballTeam.SetGates(game.GatesRight, game.GatesLeft);
     }
-
 
 }
